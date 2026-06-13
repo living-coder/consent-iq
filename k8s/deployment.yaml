@@ -1,0 +1,136 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: consent-iq-config
+  namespace: default
+data:
+  NODE_ENV: "production"
+  PORT: "8080"
+  DEBUG_MODE: "false"
+  API_BASE_URL: "https://consent-iq.example.com"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: consent-iq
+  namespace: default
+  labels:
+    app: consent-iq
+    version: v1
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: consent-iq
+  template:
+    metadata:
+      labels:
+        app: consent-iq
+        version: v1
+    spec:
+      containers:
+      - name: consent-iq
+        image: gcr.io/PROJECT_ID/consent-iq:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: http
+          containerPort: 8080
+          protocol: TCP
+        env:
+        - name: PORT
+          valueFrom:
+            configMapKeyRef:
+              name: consent-iq-config
+              key: PORT
+        - name: NODE_ENV
+          valueFrom:
+            configMapKeyRef:
+              name: consent-iq-config
+              key: NODE_ENV
+        - name: DEBUG_MODE
+          valueFrom:
+            configMapKeyRef:
+              name: consent-iq-config
+              key: DEBUG_MODE
+        - name: API_BASE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: consent-iq-config
+              key: API_BASE_URL
+        livenessProbe:
+          httpGet:
+            path: /api/health
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 3
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /api/health
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 2
+          failureThreshold: 2
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        volumeMounts:
+        - name: uploads
+          mountPath: /app/uploads
+      volumes:
+      - name: uploads
+        emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: consent-iq
+  namespace: default
+  labels:
+    app: consent-iq
+spec:
+  type: LoadBalancer
+  selector:
+    app: consent-iq
+  ports:
+  - name: http
+    port: 80
+    targetPort: 8080
+    protocol: TCP
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: consent-iq-hpa
+  namespace: default
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: consent-iq
+  minReplicas: 2
+  maxReplicas: 5
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80

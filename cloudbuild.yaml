@@ -1,0 +1,54 @@
+steps:
+  # Build Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    id: build
+    args:
+      - 'build'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/consent-iq:$SHORT_SHA'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/consent-iq:latest'
+      - '--build-arg'
+      - 'PORT=8080'
+      - '.'
+    env:
+      - 'CLOUDSDK_COMPUTE_ZONE=us-central1'
+
+  # Push to Container Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    id: push
+    args:
+      - 'push'
+      - 'gcr.io/$PROJECT_ID/consent-iq:$SHORT_SHA'
+    waitFor: ['build']
+
+  - name: 'gcr.io/cloud-builders/docker'
+    id: push-latest
+    args:
+      - 'push'
+      - 'gcr.io/$PROJECT_ID/consent-iq:latest'
+    waitFor: ['build']
+
+  # Deploy to Cloud Run
+  - name: 'gcr.io/cloud-builders/gke-deploy'
+    id: deploy
+    args:
+      - 'run'
+      - '-f=k8s/'
+      - '-i=gcr.io/$PROJECT_ID/consent-iq:$SHORT_SHA'
+      - '-l=gcr.io/$PROJECT_ID/consent-iq:latest'
+      - '-o=/workspace/output'
+    env:
+      - 'CLOUDSDK_COMPUTE_ZONE=us-central1'
+    waitFor: ['push']
+
+images:
+  - 'gcr.io/$PROJECT_ID/consent-iq:$SHORT_SHA'
+  - 'gcr.io/$PROJECT_ID/consent-iq:latest'
+
+substitutions:
+  _PORT: '8080'
+
+options:
+  machineType: 'N1_HIGHCPU_8'
+  logging: CLOUD_LOGGING_ONLY
