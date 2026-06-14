@@ -55,8 +55,20 @@ class _ConsentIQHomePageState extends State<ConsentIQHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Consent IQ'),
-        subtitle: const Text('Clinical Trial Consent Management'),
+        title: const Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Consent IQ'),
+            Text(
+              'Clinical Trial Consent Management',
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.normal,
+              ),
+            ),
+          ],
+        ),
       ),
       body: Center(
         child: Column(
