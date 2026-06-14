@@ -20,9 +20,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
   static const _demoUsers = [
     {
-      'name': 'Alice Johnson',
+      'name': 'Vikram Gupta',
       'role': 'Administrator',
-      'email': 'alice@consentiq.com',
+      'email': 'vikramg@consentiq.com',
       'password': 'admin123',
       'color': Color(0xFF6A1B9A),
       'icon': Icons.admin_panel_settings,
@@ -45,15 +45,15 @@ class _LoginScreenState extends State<LoginScreen> {
     },
     {
       'name': 'Grace Kim',
-      'role': 'Participant (Consented)',
+      'role': 'Participant',
       'email': 'grace@email.com',
       'password': 'patient123',
       'color': Color(0xFF2E7D32),
-      'icon': Icons.verified_user,
+      'icon': Icons.person,
     },
     {
       'name': 'Henry Liu',
-      'role': 'Participant (Pending)',
+      'role': 'Participant',
       'email': 'henry@email.com',
       'password': 'patient123',
       'color': Color(0xFF2E7D32),

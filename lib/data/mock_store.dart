@@ -6,7 +6,7 @@ class MockStore {
   MockStore._internal();
 
   final List<User> users = [
-    User(id: 'u1', name: 'Alice Johnson', email: 'alice@consentiq.com', password: 'admin123', role: UserRole.admin),
+    User(id: 'u1', name: 'Vikram Gupta', email: 'vikramg@consentiq.com', password: 'admin123', role: UserRole.admin),
     User(id: 'u2', name: 'Bob Martinez', email: 'bob@consentiq.com', password: 'admin123', role: UserRole.admin),
     User(id: 'u3', name: 'Carol Chen', email: 'carol@pharmax.com', password: 'sponsor123', role: UserRole.sponsor, entityId: 's1'),
     User(id: 'u4', name: 'David Park', email: 'david@genethera.com', password: 'sponsor123', role: UserRole.sponsor, entityId: 's2'),
