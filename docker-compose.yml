@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  consent-iq:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        PORT: ${PORT:-3000}
+    ports:
+      - "${PORT:-3000}:${PORT:-3000}"
+    environment:
+      - NODE_ENV=production
+      - PORT=${PORT:-3000}
+    volumes:
+      - ./uploads:/app/uploads
+    restart: unless-stopped
+
+  consent-iq-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+      args:
+        PORT: ${PORT:-3000}
+    ports:
+      - "${PORT:-3000}:${PORT:-3000}"
+      - "5900:5900"
+    environment:
+      - NODE_ENV=development
+      - PORT=${PORT:-3000}
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.dart_tool
+    restart: unless-stopped
