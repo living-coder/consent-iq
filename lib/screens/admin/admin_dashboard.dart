@@ -15,9 +15,6 @@ class AdminDashboard extends StatelessWidget {
 
     final activeStudies =
         data.allStudies.where((s) => s.status == StudyStatus.active).length;
-    final consented = data.allParticipants
-        .where((p) => p.consentStatus == ConsentStatus.consented)
-        .length;
 
     return Scaffold(
       backgroundColor: const Color(0xFFF0F4F8),
@@ -57,16 +54,6 @@ class AdminDashboard extends StatelessWidget {
                     value: '$activeStudies',
                     icon: Icons.science,
                     color: const Color(0xFFE65100)),
-                StatCard(
-                    title: 'Participants',
-                    value: '${data.allParticipants.length}',
-                    icon: Icons.people,
-                    color: const Color(0xFF6A1B9A)),
-                StatCard(
-                    title: 'Consented',
-                    value: '$consented',
-                    icon: Icons.verified,
-                    color: const Color(0xFF2E7D32)),
               ],
             ),
             const SizedBox(height: 28),
@@ -117,7 +104,7 @@ class AdminDashboard extends StatelessWidget {
                           subtitle: Text(rc.location,
                               style: const TextStyle(fontSize: 12)),
                           trailing: Text(
-                              '${data.participantsByRC(rc.id).length} participants',
+                              '${data.studiesForRC(rc.id).length} studies',
                               style: const TextStyle(
                                   fontSize: 11, color: Colors.grey)),
                         ))
@@ -166,56 +153,11 @@ class AdminDashboard extends StatelessWidget {
                   subtitle: Text(
                       '${sponsor?.name ?? '—'} · ${s.therapeuticArea}',
                       style: const TextStyle(fontSize: 12)),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      StatusChip(label: s.status.label, color: s.status.color),
-                      const SizedBox(width: 8),
-                      Text(
-                          '${data.participantsByStudy(s.id).length}/${s.targetEnrollment}',
-                          style: const TextStyle(
-                              fontSize: 11, color: Colors.grey)),
-                    ],
-                  ),
+                  trailing: StatusChip(label: s.status.label, color: s.status.color),
                 );
               }).toList(),
             ),
 
-            const SizedBox(height: 16),
-
-            // Participant consent overview
-            SectionCard(
-              title: 'Participant Consent Overview',
-              icon: Icons.assignment_turned_in_outlined,
-              children: data.allParticipants.map((p) {
-                final study = p.assignedStudyId != null
-                    ? data.getStudy(p.assignedStudyId!)
-                    : null;
-                final rc = data.getResearchCenter(p.researchCenterId);
-                return ListTile(
-                  dense: true,
-                  leading: CircleAvatar(
-                    radius: 16,
-                    backgroundColor:
-                        p.consentStatus.color.withOpacity(0.12),
-                    child: Text(p.name[0],
-                        style: TextStyle(
-                            color: p.consentStatus.color,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 13)),
-                  ),
-                  title: Text('${p.name}, ${p.age}y ${p.gender}',
-                      style: const TextStyle(
-                          fontWeight: FontWeight.w500, fontSize: 13)),
-                  subtitle: Text(
-                      '${rc?.name ?? '—'} · ${study?.title ?? 'No study assigned'}',
-                      style: const TextStyle(fontSize: 12)),
-                  trailing: StatusChip(
-                      label: p.consentStatus.label,
-                      color: p.consentStatus.color),
-                );
-              }).toList(),
-            ),
           ],
         ),
       ),

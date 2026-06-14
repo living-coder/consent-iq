@@ -20,13 +20,6 @@ class SponsorDashboard extends StatelessWidget {
         .expand((s) => s.researchCenterIds)
         .toSet()
         .length;
-    final totalParticipants = studies
-        .expand((s) => data.participantsByStudy(s.id))
-        .length;
-    final consented = studies
-        .expand((s) => data.participantsByStudy(s.id))
-        .where((p) => p.consentStatus == ConsentStatus.consented)
-        .length;
 
     return Scaffold(
       backgroundColor: const Color(0xFFF0F4F8),
@@ -97,16 +90,6 @@ class SponsorDashboard extends StatelessWidget {
                     value: '$assignedRCs',
                     icon: Icons.local_hospital,
                     color: const Color(0xFF00695C)),
-                StatCard(
-                    title: 'Participants',
-                    value: '$totalParticipants',
-                    icon: Icons.people,
-                    color: const Color(0xFF6A1B9A)),
-                StatCard(
-                    title: 'Consented',
-                    value: '$consented',
-                    icon: Icons.verified,
-                    color: const Color(0xFF2E7D32)),
               ],
             ),
             const SizedBox(height: 28),
