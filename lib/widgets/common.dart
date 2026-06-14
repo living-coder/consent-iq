@@ -126,7 +126,7 @@ class InfoRow extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
-            width: 180,
+            width: 140,
             child: Text(label,
                 style: TextStyle(
                     color: scheme.onSurfaceVariant,
@@ -187,25 +187,41 @@ class PageHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    final titleWidget = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(title,
-                style: Theme.of(context)
-                    .textTheme
-                    .headlineSmall
-                    ?.copyWith(fontWeight: FontWeight.bold)),
-            if (subtitle != null)
-              Text(subtitle!,
-                  style: TextStyle(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant)),
-          ],
-        ),
-        const Spacer(),
-        if (action != null) action!,
+        Text(title,
+            style: Theme.of(context)
+                .textTheme
+                .headlineSmall
+                ?.copyWith(fontWeight: FontWeight.bold)),
+        if (subtitle != null)
+          Text(subtitle!,
+              style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant)),
       ],
     );
+
+    if (action == null) return titleWidget;
+
+    return LayoutBuilder(builder: (_, constraints) {
+      if (constraints.maxWidth < 460) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            titleWidget,
+            const SizedBox(height: 12),
+            action!,
+          ],
+        );
+      }
+      return Row(
+        children: [
+          Expanded(child: titleWidget),
+          const SizedBox(width: 16),
+          action!,
+        ],
+      );
+    });
   }
 }

@@ -15,13 +15,7 @@ class StudiesScreen extends StatelessWidget {
     final data = context.watch<DataProvider>();
     final studies = data.studiesBySponsor(user.entityId ?? '');
 
-    return Scaffold(
-      backgroundColor: const Color(0xFFF0F4F8),
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: const Text('Clinical Studies'),
-      ),
-      body: SingleChildScrollView(
+    return SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -186,7 +180,6 @@ class StudiesScreen extends StatelessWidget {
               }),
           ],
         ),
-      ),
     );
   }
 }

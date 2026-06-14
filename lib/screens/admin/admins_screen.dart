@@ -14,13 +14,7 @@ class AdminsScreen extends StatelessWidget {
     final currentUserId = context.watch<AuthProvider>().currentUser!.id;
     final admins = data.adminUsers;
 
-    return Scaffold(
-      backgroundColor: const Color(0xFFF0F4F8),
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: const Text('Administrators'),
-      ),
-      body: SingleChildScrollView(
+    return SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -115,7 +109,6 @@ class AdminsScreen extends StatelessWidget {
             ),
           ],
         ),
-      ),
     );
   }
 }

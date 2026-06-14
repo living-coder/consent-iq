@@ -21,13 +21,7 @@ class SponsorDashboard extends StatelessWidget {
         .toSet()
         .length;
 
-    return Scaffold(
-      backgroundColor: const Color(0xFFF0F4F8),
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: Text('Welcome, ${user.name.split(' ').first}'),
-      ),
-      body: SingleChildScrollView(
+    return SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -47,17 +41,19 @@ class SponsorDashboard extends StatelessWidget {
                         child: Icon(Icons.business, color: Colors.white),
                       ),
                       const SizedBox(width: 12),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(sponsor.name,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 16)),
-                          Text(sponsor.description,
-                              style: const TextStyle(
-                                  color: Colors.grey, fontSize: 12),
-                              overflow: TextOverflow.ellipsis),
-                        ],
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(sponsor.name,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 16)),
+                            Text(sponsor.description,
+                                style: const TextStyle(
+                                    color: Colors.grey, fontSize: 12),
+                                overflow: TextOverflow.ellipsis),
+                          ],
+                        ),
                       ),
                     ],
                   ),
@@ -199,7 +195,6 @@ class SponsorDashboard extends StatelessWidget {
             ),
           ],
         ),
-      ),
     );
   }
 }

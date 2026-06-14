@@ -17,25 +17,18 @@ class ParticipantDashboard extends StatelessWidget {
     final participant = data.getParticipant(user.entityId ?? '');
 
     if (participant == null) {
-      return Scaffold(
-        backgroundColor: const Color(0xFFF0F4F8),
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          title: const Text('My Study'),
-        ),
-        body: const Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.assignment_outlined, size: 64, color: Colors.grey),
-              SizedBox(height: 16),
-              Text('Your participant record could not be found.',
-                  style: TextStyle(color: Colors.grey)),
-              SizedBox(height: 8),
-              Text('Please contact your research center.',
-                  style: TextStyle(color: Colors.grey, fontSize: 12)),
-            ],
-          ),
+      return const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.assignment_outlined, size: 64, color: Colors.grey),
+            SizedBox(height: 16),
+            Text('Your participant record could not be found.',
+                style: TextStyle(color: Colors.grey)),
+            SizedBox(height: 8),
+            Text('Please contact your research center.',
+                style: TextStyle(color: Colors.grey, fontSize: 12)),
+          ],
         ),
       );
     }
@@ -48,13 +41,7 @@ class ParticipantDashboard extends StatelessWidget {
     final rc = data.getResearchCenter(participant.researchCenterId);
     final fmt = DateFormat('MMMM d, yyyy');
 
-    return Scaffold(
-      backgroundColor: const Color(0xFFF0F4F8),
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: Text('Welcome, ${user.name.split(' ').first}'),
-      ),
-      body: SingleChildScrollView(
+    return SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 700),
@@ -68,50 +55,61 @@ class ParticipantDashboard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12)),
                 child: Padding(
                   padding: const EdgeInsets.all(20),
-                  child: Row(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      CircleAvatar(
-                        radius: 28,
-                        backgroundColor:
-                            const Color(0xFF2E7D32).withOpacity(0.12),
-                        child: Text(participant.name[0],
-                            style: const TextStyle(
-                                fontSize: 22,
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xFF2E7D32))),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          CircleAvatar(
+                            radius: 28,
+                            backgroundColor:
+                                const Color(0xFF2E7D32).withOpacity(0.12),
+                            child: Text(participant.name[0],
+                                style: const TextStyle(
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFF2E7D32))),
+                          ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(participant.name,
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 17)),
+                                Text(
+                                    '${participant.age} years · ${participant.gender}',
+                                    style: const TextStyle(
+                                        color: Colors.grey, fontSize: 13)),
+                                Text(participant.email,
+                                    style: const TextStyle(
+                                        color: Colors.grey, fontSize: 12)),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(participant.name,
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 17)),
-                            Text('${participant.age} years · ${participant.gender}',
-                                style: const TextStyle(
-                                    color: Colors.grey, fontSize: 13)),
-                            Text(participant.email,
-                                style: const TextStyle(
-                                    color: Colors.grey, fontSize: 12)),
-                          ],
-                        ),
-                      ),
-                      if (rc != null)
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            const Text('Research Center',
-                                style: TextStyle(
-                                    fontSize: 11, color: Colors.grey)),
-                            Text(rc.name,
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.w500, fontSize: 13)),
-                            Text(rc.location,
-                                style: const TextStyle(
-                                    fontSize: 11, color: Colors.grey)),
-                          ],
-                        ),
+                      if (rc != null) ...[
+                        const SizedBox(height: 12),
+                        const Divider(height: 1),
+                        const SizedBox(height: 8),
+                        Row(children: [
+                          const Icon(Icons.local_hospital_outlined,
+                              size: 14, color: Colors.grey),
+                          const SizedBox(width: 6),
+                          Expanded(
+                            child: Text(
+                              '${rc!.name} · ${rc.location}',
+                              style: const TextStyle(
+                                  color: Colors.grey, fontSize: 12),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ]),
+                      ],
                     ],
                   ),
                 ),
@@ -322,7 +320,6 @@ class ParticipantDashboard extends StatelessWidget {
             ],
           ),
         ),
-      ),
     );
   }
 }
@@ -356,10 +353,11 @@ class _ConsentBanner extends StatelessWidget {
             size: 28,
           ),
           const SizedBox(width: 12),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Consent Status: ${status.label}',
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Consent Status: ${status.label}',
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: status.color,
@@ -369,7 +367,8 @@ class _ConsentBanner extends StatelessWidget {
                 Text(
                     'Consented on ${fmt.format(participant.consentDate!)}',
                     style: TextStyle(color: status.color, fontSize: 12)),
-            ],
+              ],
+            ),
           ),
         ],
       ),

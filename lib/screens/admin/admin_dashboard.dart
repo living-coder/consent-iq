@@ -16,14 +16,7 @@ class AdminDashboard extends StatelessWidget {
     final activeStudies =
         data.allStudies.where((s) => s.status == StudyStatus.active).length;
 
-    return Scaffold(
-      backgroundColor: const Color(0xFFF0F4F8),
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: Text('Welcome back, ${user.name.split(' ').first}',
-            style: const TextStyle(fontSize: 18)),
-      ),
-      body: SingleChildScrollView(
+    return SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -160,7 +153,6 @@ class AdminDashboard extends StatelessWidget {
 
           ],
         ),
-      ),
     );
   }
 }

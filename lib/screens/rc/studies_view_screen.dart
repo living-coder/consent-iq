@@ -14,13 +14,7 @@ class StudiesViewScreen extends StatelessWidget {
     final data = context.watch<DataProvider>();
     final studies = data.studiesForRC(user.entityId ?? '');
 
-    return Scaffold(
-      backgroundColor: const Color(0xFFF0F4F8),
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: const Text('Assigned Clinical Studies'),
-      ),
-      body: SingleChildScrollView(
+    return SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -112,7 +106,7 @@ class StudiesViewScreen extends StatelessWidget {
                             child: Row(
                               children: [
                                 const SizedBox(
-                                  width: 180,
+                                  width: 140,
                                   child: Text('Protocol Document',
                                       style: TextStyle(
                                           color: Colors.grey,
@@ -122,11 +116,14 @@ class StudiesViewScreen extends StatelessWidget {
                                 const Icon(Icons.attach_file,
                                     size: 14, color: Color(0xFF1565C0)),
                                 const SizedBox(width: 4),
-                                Text(s.protocolDocumentName!,
-                                    style: const TextStyle(
-                                        color: Color(0xFF1565C0),
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w500)),
+                                Expanded(
+                                  child: Text(s.protocolDocumentName!,
+                                      style: const TextStyle(
+                                          color: Color(0xFF1565C0),
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w500),
+                                      overflow: TextOverflow.ellipsis),
+                                ),
                               ],
                             ),
                           ),
@@ -213,7 +210,6 @@ class StudiesViewScreen extends StatelessWidget {
               }),
           ],
         ),
-      ),
     );
   }
 }

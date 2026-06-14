@@ -27,13 +27,7 @@ class RCDashboard extends StatelessWidget {
     final unassigned =
         participants.where((p) => p.assignedStudyId == null).length;
 
-    return Scaffold(
-      backgroundColor: const Color(0xFFF0F4F8),
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: Text(rc?.name ?? 'Research Center Dashboard'),
-      ),
-      body: SingleChildScrollView(
+    return SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -54,23 +48,28 @@ class RCDashboard extends StatelessWidget {
                             Icon(Icons.local_hospital, color: Colors.white),
                       ),
                       const SizedBox(width: 12),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(rc.name,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 16)),
-                          Row(
-                            children: [
-                              const Icon(Icons.location_on_outlined,
-                                  size: 13, color: Colors.grey),
-                              const SizedBox(width: 4),
-                              Text(rc.location,
-                                  style: const TextStyle(
-                                      color: Colors.grey, fontSize: 13)),
-                            ],
-                          ),
-                        ],
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(rc.name,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 16)),
+                            Row(
+                              children: [
+                                const Icon(Icons.location_on_outlined,
+                                    size: 13, color: Colors.grey),
+                                const SizedBox(width: 4),
+                                Flexible(
+                                  child: Text(rc.location,
+                                      style: const TextStyle(
+                                          color: Colors.grey, fontSize: 13),
+                                      overflow: TextOverflow.ellipsis),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
@@ -237,7 +236,6 @@ class RCDashboard extends StatelessWidget {
             ),
           ],
         ),
-      ),
     );
   }
 }

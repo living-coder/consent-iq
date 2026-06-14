@@ -16,13 +16,7 @@ class ParticipantsScreen extends StatelessWidget {
     final participants = data.participantsByRC(rcId);
     final studies = data.studiesForRC(rcId);
 
-    return Scaffold(
-      backgroundColor: const Color(0xFFF0F4F8),
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: const Text('Participants'),
-      ),
-      body: SingleChildScrollView(
+    return SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -171,7 +165,6 @@ class ParticipantsScreen extends StatelessWidget {
               }),
           ],
         ),
-      ),
     );
   }
 }
