@@ -51,7 +51,7 @@ RUN apk add --no-cache ca-certificates openssl
 COPY package.json package-lock.json* ./
 
 # Install Node dependencies (production only)
-RUN npm ci --production
+RUN npm install --production
 
 # Copy built Flutter web app
 COPY --from=app-builder /app/build/web ./public
