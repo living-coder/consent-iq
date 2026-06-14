@@ -1,35 +1,18 @@
 steps:
-  # Build Docker image
-  - name: 'gcr.io/cloud-builders/docker'
-    id: build
+  # Build and push with Kaniko — layers are cached in GCR between builds
+  - name: 'gcr.io/kaniko-project/executor:latest'
+    id: build-push
     args:
-      - 'build'
-      - '-t'
-      - 'gcr.io/$PROJECT_ID/consent-iq:$SHORT_SHA'
-      - '-t'
-      - 'gcr.io/$PROJECT_ID/consent-iq:latest'
-      - '--build-arg'
-      - 'PORT=8080'
-      - '.'
-    env:
-      - 'CLOUDSDK_COMPUTE_ZONE=us-central1'
+      - '--context=dir:///workspace'
+      - '--dockerfile=/workspace/Dockerfile'
+      - '--destination=gcr.io/$PROJECT_ID/consent-iq:$SHORT_SHA'
+      - '--destination=gcr.io/$PROJECT_ID/consent-iq:latest'
+      - '--build-arg=PORT=8080'
+      - '--cache=true'
+      - '--cache-ttl=168h'
+      - '--cache-repo=gcr.io/$PROJECT_ID/consent-iq/cache'
 
-  # Push to Container Registry
-  - name: 'gcr.io/cloud-builders/docker'
-    id: push
-    args:
-      - 'push'
-      - 'gcr.io/$PROJECT_ID/consent-iq:$SHORT_SHA'
-    waitFor: ['build']
-
-  - name: 'gcr.io/cloud-builders/docker'
-    id: push-latest
-    args:
-      - 'push'
-      - 'gcr.io/$PROJECT_ID/consent-iq:latest'
-    waitFor: ['build']
-
-  # Deploy to Cloud Run
+  # Deploy to GKE
   - name: 'gcr.io/cloud-builders/gke-deploy'
     id: deploy
     args:
@@ -40,7 +23,7 @@ steps:
       - '-o=/workspace/output'
     env:
       - 'CLOUDSDK_COMPUTE_ZONE=us-central1'
-    waitFor: ['push']
+    waitFor: ['build-push']
 
 images:
   - 'gcr.io/$PROJECT_ID/consent-iq:$SHORT_SHA'
